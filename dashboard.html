@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Prime Global Mobile Banking - Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2f5;
+      margin: 0;
+      padding: 20px;
+    }
+    .card {
+      background: #0b3c5d;
+      color: white;
+      padding: 20px;
+      border-radius: 14px;
+      margin-bottom: 20px;
+    }
+    .balance {
+      font-size: 30px;
+      margin-top: 10px;
+    }
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 14px;
+      margin-bottom: 15px;
+    }
+    select, button {
+      width: 100%;
+      padding: 14px;
+      border-radius: 8px;
+      border: none;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    button {
+      background: #0b3c5d;
+      color: white;
+      cursor: pointer;
+    }
+    .txn {
+      font-size: 14px;
+      border-bottom: 1px solid #ddd;
+      padding: 8px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Welcome, <span id="username">Customer</span></h2>
+    <p>Account No: 3029 4481</p>
+
+    <select id="currency" onchange="changeCurrency()">
+      <option value="$">USD ($)</option>
+      <option value="£">GBP (£)</option>
+      <option value="€">EUR (€)</option>
+      <option value="₦">NGN (₦)</option>
+    </select>
+
+    <div class="balance">
+      <span id="symbol">$</span><span id="balance">5,000</span>
+    </div>
+  </div>
+
+  <div class="box">
+    <button onclick="sendMoney()">Send Money</button>
+    <button onclick="addMoney()">Add Money</button>
+  </div>
+
+  <div class="box">
+    <h3>Recent Transactions</h3>
+    <div id="transactions">
+      <div class="txn">Transfer — <span id="symbol2">$</span>500</div>
+      <div class="txn">POS Payment — <span id="symbol3">$</span>120</div>
+    </div>
+  </div>
+
+<script>
+  document.getElementById("username").innerText =
+    localStorage.getItem("pgmb_username") || "Customer";
+
+  let balance = 5000;
+  let symbol = "$";
+
+  function changeCurrency() {
+    symbol = document.getElementById("currency").value;
+    document.getElementById("symbol").innerText = symbol;
+    document.getElementById("symbol2").innerText = symbol;
+    document.getElementById("symbol3").innerText = symbol;
+  }
+
+  function sendMoney() {
+    alert("Transfer successful");
+  }
+
+  function addMoney() {
+    alert("Account credited");
+  }
+</script>
+
+</body>
+</html>
