@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Transaction History</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial; background: #f4f6f8; padding: 20px; }
+    .container { max-width: 700px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+    h2 { text-align: center; color: #0b3c5d; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
+    th { background: #0b3c5d; color: white; }
+    .approved { color: green; font-weight: bold; }
+    .declined { color: red; font-weight: bold; }
+    .failed { color: orange; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Admin Transaction History</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Sender</th>
+        <th>Receiver</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody id="historyBody">
+      <!-- Transactions will appear here -->
+    </tbody>
+  </table>
+</div>
+
+<script>
+  // Load transactions from localStorage
+  const transactions = JSON.parse(localStorage.getItem("pgmb_transactions") || "[]");
+  const symbol = localStorage.getItem("pgmb_currency") || "$";
+  const tbody = document.getElementById("historyBody");
+
+  transactions.forEach(tx => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = 
+      <td>${tx.sender}</td>
+      <td>${tx.receiver}</td>
+      <td>${symbol}${tx.amount.toFixed(2)}</td>
+      <td class="${tx.status.toLowerCase()}">${tx.status}</td>
+      <td>${tx.date}</td>
+      <td>${tx.time}</td>
+    ;
+    tbody.appendChild(tr);
+  });
+</script>
+
+</body>
+</html>
