@@ -25,13 +25,15 @@ function verifyOTP() {
   const realOTP = localStorage.getItem("admin_otp");
   const status = localStorage.getItem("tx_status");
 
-  if (status === "declined") {
-    alert("Transaction Declined");
-    return;
-  }
+  if (entered === realOTP && status === "approved") {
+    // Update balance (for simulation)
+    let currentBalance = parseFloat(localStorage.getItem("pgmb_balance") || "5000");
+    let transferAmount = parseFloat(localStorage.getItem("tx_amount") || "0");
+    localStorage.setItem("pgmb_balance", currentBalance - transferAmount);
 
-  if (entered === realOTP) {
-    alert("Transfer Successful");
+    window.location.href = "receipt.html"; // Redirect to receipt page
+  } else if (status === "declined") {
+    alert("Transaction Declined");
   } else {
     alert("Wrong OTP");
   }
