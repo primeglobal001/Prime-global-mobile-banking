@@ -1,32 +1,100 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Send Money</title>
+  <meta charset="UTF-8">
+  <title>Prime Global Mobile Banking - Send Money</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: Arial; padding: 20px; background: #f4f6f8; }
-    .box { background: white; padding: 20px; border-radius: 10px; }
-    input, button {
-      width: 100%; padding: 12px; margin-top: 10px;
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
     }
-    button { background: #0b3c5d; color: white; border: none; }
+    .app-container {
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      padding: 30px;
+      text-align: center;
+    }
+    h1 {
+      color: #0b3c5d;
+      margin-bottom: 10px;
+    }
+    input {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #0b3c5d, #1e5f7f);
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
   </style>
 </head>
 <body>
 
-<div class="box">
-  <h2>Send Money</h2>
-  <input id="receiver" placeholder="Receiver Name">
-  <input id="amount" placeholder="Amount">
-  <button onclick="requestOTP()">Continue</button>
-</div>
+  <div class="app-container">
+    <div class="card">
+      <h1>Send Money</h1>
 
-<script>
-function requestOTP() {
-  localStorage.setItem("tx_receiver", receiver.value);
-  localStorage.setItem("tx_amount", amount.value);
-  window.location.href = "otp.html";
-}
-</script>
+      <input type="text" placeholder="Receiver Name" id="receiver">
+      <input type="number" placeholder="Amount" id="amount">
+
+      <button onclick="sendMoney()">Send</button>
+      <button onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+    </div>
+  </div>
+
+  <script>
+    function sendMoney() {
+      const receiver = document.getElementById("receiver").value;
+      const amount = parseFloat(document.getElementById("amount").value);
+      const balance = parseFloat(localStorage.getItem("pgmb_balance") || "5000");
+
+      if (!receiver || !amount || amount <= 0) {
+        alert("Please enter valid receiver and amount");
+        return;
+      }
+
+      if (amount > balance) {
+        alert("Insufficient balance");
+        return;
+      }
+
+      // Save transaction info temporarily for OTP
+      localStorage.setItem("tx_receiver", receiver);
+      localStorage.setItem("tx_amount", amount);
+      localStorage.setItem("tx_status", "pending");
+
+      // Redirect to OTP page
+      window.location.href = "otp.html";
+    }
+  </script>
 
 </body>
 </html>
