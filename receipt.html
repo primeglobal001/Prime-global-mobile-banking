@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Prime Global Mobile Banking - Receipt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial; background: #f4f6f8; padding: 20px; }
+    .receipt { background: white; padding: 30px; border-radius: 12px; max-width: 500px; margin: auto; box-shadow: 0 10px 20px rgba(0,0,0,0.1);}
+    h2 { text-align: center; color: #0b3c5d; }
+    p { font-size: 16px; margin: 8px 0; }
+    .success { color: green; font-weight: bold; font-size: 18px; text-align:center; }
+    button { width: 100%; padding: 12px; border:none; border-radius:8px; background:#0b3c5d; color:white; font-size:16px; margin-top:20px; cursor:pointer; }
+  </style>
+</head>
+<body>
+
+<div class="receipt">
+  <h2>Transaction Receipt</h2>
+  <p>Sender: <span id="sender">Customer</span></p>
+  <p>Receiver: <span id="receiver">John Doe</span></p>
+  <p>Amount: <span id="amount">$0.00</span></p>
+  <p>Date: <span id="date"></span></p>
+  <p>Time: <span id="time"></span></p>
+  <p>Balance After Transfer: <span id="balance">$0.00</span></p>
+  <p class="success">Transaction Successful ✅</p>
+  <button onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+</div>
+
+<script>
+  // Load transaction data from localStorage
+  const sender = localStorage.getItem("pgmb_username") || "Customer";
+  const receiver = localStorage.getItem("tx_receiver") || "Receiver";
+  const amount = localStorage.getItem("tx_amount") || "0.00";
+  const balance = localStorage.getItem("pgmb_balance") || "5000";
+
+  document.getElementById("sender").innerText = sender;
+  document.getElementById("receiver").innerText = receiver;
+  document.getElementById("amount").innerText = "$" + amount;
+  document.getElementById("balance").innerText = "$" + balance;
+
+  // Current date & time
+  const now = new Date();
+  document.getElementById("date").innerText = now.toLocaleDateString();
+  document.getElementById("time").innerText = now.toLocaleTimeString();
+</script>
+
+</body>
+</html>
