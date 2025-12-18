@@ -30,7 +30,18 @@ function verifyOTP() {
     let currentBalance = parseFloat(localStorage.getItem("pgmb_balance") || "5000");
     let transferAmount = parseFloat(localStorage.getItem("tx_amount") || "0");
     localStorage.setItem("pgmb_balance", currentBalance - transferAmount);
-
+// Save transaction in localStorage
+const now = new Date();
+const transactions = JSON.parse(localStorage.getItem("pgmb_transactions") || "[]");
+transactions.push({
+  sender: localStorage.getItem("pgmb_username") || "Customer",
+  receiver: localStorage.getItem("tx_receiver") || "Receiver",
+  amount: transferAmount,
+  status: "Approved",
+  date: now.toLocaleDateString(),
+  time: now.toLocaleTimeString()
+});
+localStorage.setItem("pgmb_transactions", JSON.stringify(transactions));
     window.location.href = "receipt.html"; // Redirect to receipt page
   } else if (status === "declined") {
     alert("Transaction Declined");
