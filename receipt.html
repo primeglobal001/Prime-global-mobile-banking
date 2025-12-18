@@ -5,45 +5,88 @@
   <title>Prime Global Mobile Banking - Receipt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: Arial; background: #f4f6f8; padding: 20px; }
-    .receipt { background: white; padding: 30px; border-radius: 12px; max-width: 500px; margin: auto; box-shadow: 0 10px 20px rgba(0,0,0,0.1);}
-    h2 { text-align: center; color: #0b3c5d; }
-    p { font-size: 16px; margin: 8px 0; }
-    .success { color: green; font-weight: bold; font-size: 18px; text-align:center; }
-    button { width: 100%; padding: 12px; border:none; border-radius:8px; background:#0b3c5d; color:white; font-size:16px; margin-top:20px; cursor:pointer; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .app-container {
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      padding: 30px;
+      text-align: center;
+    }
+    h1 {
+      color: #0b3c5d;
+      margin-bottom: 10px;
+    }
+    .details {
+      text-align: left;
+      margin: 20px 0;
+      font-size: 16px;
+    }
+    .details p {
+      margin: 6px 0;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #0b3c5d, #1e5f7f);
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
   </style>
 </head>
 <body>
 
-<div class="receipt">
-  <h2>Transaction Receipt</h2>
-  <p>Sender: <span id="sender">Customer</span></p>
-  <p>Receiver: <span id="receiver">John Doe</span></p>
-  <p>Amount: <span id="amount">$0.00</span></p>
-  <p>Date: <span id="date"></span></p>
-  <p>Time: <span id="time"></span></p>
-  <p>Balance After Transfer: <span id="balance">$0.00</span></p>
-  <p class="success">Transaction Successful ✅</p>
-  <button onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
-</div>
+  <div class="app-container">
+    <div class="card">
+      <h1>Transaction Receipt</h1>
 
-<script>
-  // Load transaction data from localStorage
-  const sender = localStorage.getItem("pgmb_username") || "Customer";
-  const receiver = localStorage.getItem("tx_receiver") || "Receiver";
-  const amount = localStorage.getItem("tx_amount") || "0.00";
-  const balance = localStorage.getItem("pgmb_balance") || "5000";
+      <div class="details">
+        <p><strong>Sender:</strong> <span id="sender"></span></p>
+        <p><strong>Receiver:</strong> <span id="receiver"></span></p>
+        <p><strong>Amount:</strong> <span id="amount"></span></p>
+        <p><strong>Date:</strong> <span id="date"></span></p>
+        <p><strong>Time:</strong> <span id="time"></span></p>
+        <p><strong>Status:</strong> <span id="status"></span></p>
+      </div>
 
-  document.getElementById("sender").innerText = sender;
-  document.getElementById("receiver").innerText = receiver;
-  document.getElementById("amount").innerText = "$" + amount;
-  document.getElementById("balance").innerText = "$" + balance;
+      <button onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+    </div>
+  </div>
 
-  // Current date & time
-  const now = new Date();
-  document.getElementById("date").innerText = now.toLocaleDateString();
-  document.getElementById("time").innerText = now.toLocaleTimeString();
-</script>
+  <script>
+    const transactions = JSON.parse(localStorage.getItem("pgmb_transactions") || "[]");
+    const lastTx = transactions[transactions.length - 1] || {};
+
+    document.getElementById("sender").innerText = lastTx.sender || "N/A";
+    document.getElementById("receiver").innerText = lastTx.receiver || "N/A";
+    const symbol = localStorage.getItem("pgmb_currency") || "$";
+    document.getElementById("amount").innerText = symbol + (lastTx.amount || "0.00");
+    document.getElementById("date").innerText = lastTx.date || "N/A";
+    document.getElementById("time").innerText = lastTx.time || "N/A";
+    document.getElementById("status").innerText = lastTx.status || "N/A";
+  </script>
 
 </body>
 </html>
