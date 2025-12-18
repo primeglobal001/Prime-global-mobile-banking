@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OTP Verification</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f4f6f8; }
+    .box { background: white; padding: 20px; border-radius: 10px; }
+    input, button {
+      width: 100%; padding: 12px; margin-top: 10px;
+    }
+    button { background: #0b3c5d; color: white; border: none; }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Enter OTP</h2>
+  <input id="otp" placeholder="Enter OTP">
+  <button onclick="verifyOTP()">Confirm</button>
+</div>
+
+<script>
+function verifyOTP() {
+  const entered = otp.value;
+  const realOTP = localStorage.getItem("admin_otp");
+  const status = localStorage.getItem("tx_status");
+
+  if (status === "declined") {
+    alert("Transaction Declined");
+    return;
+  }
+
+  if (entered === realOTP) {
+    alert("Transfer Successful");
+  } else {
+    alert("Wrong OTP");
+  }
+}
+</script>
+
+</body>
+</html>
