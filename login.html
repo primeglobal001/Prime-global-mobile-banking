@@ -6,40 +6,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      text-align: center;
-      padding: 40px;
+      font-family: 'Roboto', sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
-    .box {
-      background: white;
-      padding: 30px;
+    .app-container {
+      width: 100%;
       max-width: 400px;
-      margin: auto;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      padding: 30px;
+      text-align: center;
+    }
+    h1 {
+      color: #0b3c5d;
+      margin-bottom: 10px;
     }
     input {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       margin: 10px 0;
-      border-radius: 6px;
+      border-radius: 8px;
       border: 1px solid #ccc;
       font-size: 16px;
     }
     button {
       width: 100%;
-      padding: 12px;
-      margin-top: 10px;
+      padding: 14px;
+      margin-top: 12px;
       border: none;
-      border-radius: 6px;
-      background: #0b3c5d;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #0b3c5d, #1e5f7f);
       color: white;
       font-size: 16px;
       cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
     .disclaimer {
-      color: red;
+      color: #e53935;
       font-size: 14px;
       margin-top: 15px;
     }
@@ -47,20 +63,25 @@
 </head>
 <body>
 
-  <div class="box">
-    <h1>Login</h1>
-    <input type="text" placeholder="Username" id="username">
-    <input type="password" placeholder="Password" id="password">
-    <button onclick="login()">Login</button>
+  <div class="app-container">
+    <div class="card">
+      <h1>Prime Global Mobile Banking</h1>
+      <p>Simulation Only – Educational / Movie Use</p>
 
-    <p class="disclaimer">
-      ⚠️ Simulation Only – Educational / Movie Use
-    </p>
+      <input type="text" placeholder="Username" id="username">
+      <input type="password" placeholder="Password" id="password">
+      <button onclick="login()">Login</button>
+
+      <p class="disclaimer">
+        ⚠️ No real money • No real banking
+      </p>
+    </div>
   </div>
 
   <script>
     function login() {
       // Fake login - just redirect to dashboard
+      localStorage.setItem("pgmb_username", document.getElementById("username").value);
       window.location.href = "dashboard.html";
     }
   </script>
