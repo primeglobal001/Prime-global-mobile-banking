@@ -45,7 +45,21 @@ localStorage.setItem("pgmb_transactions", JSON.stringify(transactions));
     window.location.href = "receipt.html"; // Redirect to receipt page
   } else if (status === "declined") {
     alert("Transaction Declined");
-  } else {
+  } else {else {
+  // Save failed transaction
+  const transactions = JSON.parse(localStorage.getItem("pgmb_transactions") || "[]");
+  transactions.push({
+    sender: localStorage.getItem("pgmb_username") || "Customer",
+    receiver: localStorage.getItem("tx_receiver") || "Receiver",
+    amount: parseFloat(localStorage.getItem("tx_amount") || "0"),
+    status: "Failed",
+    date: new Date().toLocaleDateString(),
+    time: new Date().toLocaleTimeString()
+  });
+  localStorage.setItem("pgmb_transactions", JSON.stringify(transactions));
+
+  alert("Wrong OTP");
+}
     alert("Wrong OTP");
   }
 }
