@@ -1,69 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>OTP Verification</title>
+  <meta charset="UTF-8">
+  <title>Prime Global Mobile Banking - OTP Verification</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: Arial; padding: 20px; background: #f4f6f8; }
-    .box { background: white; padding: 20px; border-radius: 10px; }
-    input, button {
-      width: 100%; padding: 12px; margin-top: 10px;
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
     }
-    button { background: #0b3c5d; color: white; border: none; }
+    .app-container {
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      padding: 30px;
+      text-align: center;
+    }
+    h1 {
+      color: #0b3c5d;
+      margin-bottom: 10px;
+    }
+    input {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #0b3c5d, #1e5f7f);
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .disclaimer {
+      color: #e53935;
+      font-size: 14px;
+      margin-top: 15px;
+    }
   </style>
 </head>
 <body>
 
-<div class="box">
-  <h2>Enter OTP</h2>
-  <input id="otp" placeholder="Enter OTP">
-  <button onclick="verifyOTP()">Confirm</button>
-</div>
+  <div class="app-container">
+    <div class="card">
+      <h1>OTP Verification</h1>
+      <p>Enter the OTP sent by the admin</p>
 
-<script>
-function verifyOTP() {
-  const entered = otp.value;
-  const realOTP = localStorage.getItem("admin_otp");
-  const status = localStorage.getItem("tx_status");
+      <input type="text" placeholder="Enter OTP" id="otp">
+      <button onclick="verifyOTP()">Submit</button>
+      <button onclick="window.location.href='dashboard.html'">Cancel</button>
 
-  if (entered === realOTP && status === "approved") {
-    // Update balance (for simulation)
-    let currentBalance = parseFloat(localStorage.getItem("pgmb_balance") || "5000");
-    let transferAmount = parseFloat(localStorage.getItem("tx_amount") || "0");
-    localStorage.setItem("pgmb_balance", currentBalance - transferAmount);
-// Save transaction in localStorage
-const now = new Date();
-const transactions = JSON.parse(localStorage.getItem("pgmb_transactions") || "[]");
-transactions.push({
-  sender: localStorage.getItem("pgmb_username") || "Customer",
-  receiver: localStorage.getItem("tx_receiver") || "Receiver",
-  amount: transferAmount,
-  status: "Approved",
-  date: now.toLocaleDateString(),
-  time: now.toLocaleTimeString()
-});
-localStorage.setItem("pgmb_transactions", JSON.stringify(transactions));
-    window.location.href = "receipt.html"; // Redirect to receipt page
-  } else if (status === "declined") {
-    alert("Transaction Declined");
-  } else {else {
-  // Save failed transaction
-  const transactions = JSON.parse(localStorage.getItem("pgmb_transactions") || "[]");
-  transactions.push({
-    sender: localStorage.getItem("pgmb_username") || "Customer",
-    receiver: localStorage.getItem("tx_receiver") || "Receiver",
-    amount: parseFloat(localStorage.getItem("tx_amount") || "0"),
-    status: "Failed",
-    date: new Date().toLocaleDateString(),
-    time: new Date().toLocaleTimeString()
-  });
-  localStorage.setItem("pgmb_transactions", JSON.stringify(transactions));
+      <p class="disclaimer">
+        ⚠ Simulation Only – Educational / Movie Use
+      </p>
+    </div>
+  </div>
 
-  alert("Wrong OTP");
-}
-    alert("Wrong OTP");
-  }
-}
-</script>
+  <script>
+    const otpInput = document.getElementById("otp");
+
+    function verifyOTP() {
+      const entered = otpInput.value;
+      const realOTP = localStorage.getItem("admin_otp");
+      const status = localStorage.getItem("tx_status");
+      const transferAmount = parseFloat(localStorage.getItem("tx_amount") || "0");
+
+      if (entered === realOTP && status === "approved") {
+        // Update balance
+        let currentBalance = parseFloat(localStorage.getItem("pgmb_balance") || "5000");
+        localStorage.setItem("pgmb_balance", currentBalance - transferAmount);
+
+        // Save transaction
+        const now = new Date();
+        const transactions = JSON.parse(localStorage.getItem("pgmb_transactions") || "[]");
+        transactions.push({
+          sender: localStorage.getItem("pgmb_username") || "Customer",
+          receiver: localStorage.getItem("tx_receiver") || "Receiver",
+          amount: transferAmount,
+          status: "Approved",
+          date: now.toLocaleDateString(),
+          time: now.toLocaleTimeString()
+        });
+        localStorage.setItem("pgmb_transactions", JSON.stringify(transactions));
+
+        window.location.href = "receipt.html";
+      } else if (status === "declined") {
+        alert("Transaction Declined");
+      } else {
+        alert("Wrong OTP");
+      }
+    }
+  </script>
 
 </body>
 </html>
