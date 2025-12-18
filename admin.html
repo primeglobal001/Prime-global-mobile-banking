@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #222; color: white; }
+    .box { background: #333; padding: 20px; border-radius: 10px; }
+    input, button {
+      width: 100%; padding: 12px; margin-top: 10px;
+    }
+    button { background: green; border: none; color: white; }
+    .decline { background: red; }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Admin OTP Control</h2>
+
+  <p>Receiver: <span id="r"></span></p>
+  <p>Amount: <span id="a"></span></p>
+
+  <button onclick="generateOTP()">Generate OTP</button>
+  <p>OTP: <strong id="otp"></strong></p>
+
+  <button onclick="approve()">Approve</button>
+  <button class="decline" onclick="decline()">Decline</button>
+</div>
+
+<script>
+r.innerText = localStorage.getItem("tx_receiver");
+a.innerText = localStorage.getItem("tx_amount");
+
+function generateOTP() {
+  const code = Math.floor(100000 + Math.random() * 900000);
+  localStorage.setItem("admin_otp", code);
+  otp.innerText = code;
+}
+
+function approve() {
+  localStorage.setItem("tx_status", "approved");
+  alert("Transaction Approved");
+}
+
+function decline() {
+  localStorage.setItem("tx_status", "declined");
+  alert("Transaction Declined");
+}
+</script>
+
+</body>
+</html>
