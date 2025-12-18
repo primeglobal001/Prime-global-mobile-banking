@@ -1,52 +1,216 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Admin Panel</title>
+  <meta charset="UTF-8">
+  <title>Prime Global Mobile Banking - Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: Arial; padding: 20px; background: #222; color: white; }
-    .box { background: #333; padding: 20px; border-radius: 10px; }
-    input, button {
-      width: 100%; padding: 12px; margin-top: 10px;
-    }
-    button { background: green; border: none; color: white; }
-    .decline { background: red; }
+    body { font-family: 'Roboto', sans-serif; background: #f0f2f5; margin:0; padding:20px; }
+    h1 { text-align:center; color:#0b3c5d; margin-bottom:20px; }
+    .container { max-width: 1000px; margin:auto; }
+    .card { background:white; padding:20px; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.1); margin-bottom:20px; }
+    input, select { width:100%; padding:10px; margin:8px 0; border-radius:8px; border:1px solid #ccc; font-size:16px; }
+    button { padding:12px; margin-top:10px; border:none; border-radius:8px; background:linear-gradient(90deg,#0b3c5d,#1e5f7f); color:white; font-size:16px; cursor:pointer; width:100%; }
+    button:hover { opacity:0.9; }
+    table { width:100%; border-collapse:collapse; margin-top:10px; }
+    th, td { border:1px solid #ccc; padding:8px; text-align:center; }
+    th { background:#0b3c5d; color:white; }
+    .tab { display:none; }
+    .tab.active { display:block; }
+    .tabs button { width:24%; display:inline-block; margin-right:1%; }
+    .tabs button:last-child { margin-right:0; }
+    .otp-display { font-weight:bold; margin-top:10px; color:#1e5f7f; }
   </style>
 </head>
 <body>
 
-<div class="box">
-  <h2>Admin OTP Control</h2>
+  <h1>Admin Dashboard - Prime Global Mobile Banking</h1>
+  <div class="container">
 
-  <p>Receiver: <span id="r"></span></p>
-  <p>Amount: <span id="a"></span></p>
+    <!-- Tabs -->
+    <div class="tabs">
+      <button onclick="showTab('create')">Create Account</button>
+      <button onclick="showTab('manage')">Manage Users</button>
+      <button onclick="showTab('transactions')">Transactions</button>
+      <button onclick="showTab('otp')">OTP Generator</button>
+      <button onclick="showTab('admin')">Admin Controls</button>
+    </div>
 
-  <button onclick="generateOTP()">Generate OTP</button>
-  <p>OTP: <strong id="otp"></strong></p>
+    <!-- Create Account -->
+    <div id="create" class="card tab active">
+      <h2>Create Account</h2>
+      <input type="text" id="fullName" placeholder="Full Name">
+      <select id="gender"><option value="">Select Gender</option><option>Male</option><option>Female</option></select>
+      <select id="maritalStatus"><option value="">Marital Status</option><option>Single</option><option>Married</option></select>
+      <input type="date" id="dob" placeholder="Date of Birth">
+      <input type="text" id="occupation" placeholder="Occupation">
+      <input type="email" id="email" placeholder="Email">
+      <input type="text" id="phone" placeholder="Phone Number">
+      <select id="accountType"><option value="">Account Type</option><option>Savings</option><option>Current</option><option>Fixed Deposit</option></select>
+      <select id="currency"><option value="">Currency</option><option>USD</option><option>NGN</option><option>GBP</option></select>
+      <input type="password" id="password" placeholder="Account Password">
+      <input type="text" id="pin" placeholder="4-digit PIN">
+      <select id="processing"><option value="">Processing Time</option><option>Immediate</option><option>Pending</option></select>
+      <button onclick="createAccount()">Create Account</button>
+    </div>
 
-  <button onclick="approve()">Approve</button>
-  <button class="decline" onclick="decline()">Decline</button>
-</div>
+    <!-- Manage Users -->
+    <div id="manage" class="card tab">
+      <h2>Manage Users</h2>
+      <input type="text" id="searchUser" placeholder="Search by name or ID" onkeyup="searchUsers()">
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Name</th><th>Balance</th><th>Status</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="usersTable"></tbody>
+      </table>
+    </div>
 
-<script>
-r.innerText = localStorage.getItem("tx_receiver");
-a.innerText = localStorage.getItem("tx_amount");
+    <!-- Transactions -->
+    <div id="transactions" class="card tab">
+      <h2>Transaction Manager</h2>
+      <input type="text" id="txUser" placeholder="Receiver Username">
+      <input type="number" id="txAmount" placeholder="Amount">
+      <select id="txType"><option>Credit</option><option>Debit</option></select>
+      <input type="text" id="txCode" placeholder="COT / IMF / Tax Code">
+      <select id="txStatus"><option>Approved</option><option>Pending</option><option>Declined</option></select>
+      <button onclick="addTransaction()">Add Transaction</button>
+    </div>
 
-function generateOTP() {
-  const code = Math.floor(100000 + Math.random() * 900000);
-  localStorage.setItem("admin_otp", code);
-  otp.innerText = code;
-}
+    <!-- OTP Generator -->
+    <div id="otp" class="card tab">
+      <h2>OTP Generator</h2>
+      <input type="text" id="otpUser" placeholder="Enter Username">
+      <button onclick="generateOTP()">Generate OTP</button>
+      <p class="otp-display" id="showOTP"></p>
+    </div>
 
-function approve() {
-  localStorage.setItem("tx_status", "approved");
-  alert("Transaction Approved");
-}
+    <!-- Admin Controls -->
+    <div id="admin" class="card tab">
+      <h2>Admin Controls</h2>
+      <input type="password" id="adminPass" placeholder="New Admin Password">
+      <button onclick="changeAdminPassword()">Change Password</button>
+      <button onclick="logout()">Logout</button>
+    </div>
 
-function decline() {
-  localStorage.setItem("tx_status", "declined");
-  alert("Transaction Declined");
-}
-</script>
+  </div>
+
+  <script>
+    // Initialize storage
+    if(!localStorage.getItem("admin_password")) localStorage.setItem("admin_password","1234");
+    if(!localStorage.getItem("users")) localStorage.setItem("users",JSON.stringify([]));
+
+    function showTab(tab){ document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active")); document.getElementById(tab).classList.add("active"); }
+    function generateID(){ let users=JSON.parse(localStorage.getItem("users")); return "U"+String(users.length+1).padStart(3,"0"); }
+
+    // Create Account
+    function createAccount(){
+      const user={
+        id: generateID(),
+        fullName: document.getElementById("fullName").value,
+        gender: document.getElementById("gender").value,
+        maritalStatus: document.getElementById("maritalStatus").value,
+        dob: document.getElementById("dob").value,
+        occupation: document.getElementById("occupation").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        accountType: document.getElementById("accountType").value,
+        currency: document.getElementById("currency").value,
+        password: document.getElementById("password").value,
+        pin: document.getElementById("pin").value,
+        balance: 0,
+        status: "Verified",
+        transactions: [],
+        processing: document.getElementById("processing").value
+      };
+      if(!user.fullName || !user.gender || !user.accountType || !user.currency){ alert("Fill all required fields"); return; }
+      let users = JSON.parse(localStorage.getItem("users"));
+      users.push(user); localStorage.setItem("users", JSON.stringify(users));
+      alert("Account Created: "+user.id); showUsers();
+    }
+
+    // Show Users
+    function showUsers(){
+      const users=JSON.parse(localStorage.getItem("users"));
+      const tbody=document.getElementById("usersTable"); tbody.innerHTML="";
+      users.forEach((u,i)=>{
+        tbody.innerHTML+=`<tr>
+          <td>${u.id}</td><td>${u.fullName}</td><td>${u.currency}${u.balance}</td><td>${u.status}</td>
+          <td><button onclick="editUser(${i})">Edit</button></td>
+        </tr>`;
+      });
+    }
+
+    // Search Users
+    function searchUsers(){
+      const val=document.getElementById("searchUser").value.toLowerCase();
+      const users=JSON.parse(localStorage.getItem("users"));
+      const tbody=document.getElementById("usersTable"); tbody.innerHTML="";
+      users.forEach((u,i)=>{ if(u.fullName.toLowerCase().includes(val)||u.id.toLowerCase().includes(val)){
+        tbody.innerHTML+=`<tr>
+          <td>${u.id}</td><td>${u.fullName}</td><td>${u.currency}${u.balance}</td><td>${u.status}</td>
+          <td><button onclick="editUser(${i})">Edit</button></td>
+        </tr>`;
+      }});
+    }
+
+    // Edit User (all fields editable)
+    function editUser(index){
+      const users=JSON.parse(localStorage.getItem("users"));
+      const u=users[index];
+      u.fullName = prompt("Full Name",u.fullName)||u.fullName;
+      u.gender = prompt("Gender",u.gender)||u.gender;
+      u.maritalStatus = prompt("Marital Status",u.maritalStatus)||u.maritalStatus;
+      u.dob = prompt("DOB",u.dob)||u.dob;
+      u.occupation = prompt("Occupation",u.occupation)||u.occupation;
+      u.email = prompt("Email",u.email)||u.email;
+      u.phone = prompt("Phone",u.phone)||u.phone;
+      u.accountType = prompt("Account Type",u.accountType)||u.accountType;
+      u.currency = prompt("Currency",u.currency)||u.currency;
+      u.password = prompt("Password",u.password)||u.password;
+      u.pin = prompt("PIN",u.pin)||u.pin;
+      u.balance = parseFloat(prompt("Balance",u.balance)||u.balance);
+      u.status = prompt("Status (Verified/Blocked/Frozen)",u.status)||u.status;
+      users[index]=u; localStorage.setItem("users",JSON.stringify(users)); showUsers();
+      alert("User Updated");
+    }
+
+    // Transactions
+    function addTransaction(){
+      const receiver=document.getElementById("txUser").value;
+      const amount=parseFloat(document.getElementById("txAmount").value);
+      const type=document.getElementById("txType").value;
+      const code=document.getElementById("txCode").value;
+      const status=document.getElementById("txStatus").value;
+      let users=JSON.parse(localStorage.getItem("users"));
+      const user=users.find(u=>u.fullName===receiver);
+      if(!user){ alert("User not found"); return; }
+      user.transactions.push({type,amount,code,status,date:new Date().toLocaleString()});
+      if(type==="Credit" && status==="Approved"){ user.balance+=amount; }
+      if(type==="Debit" && status==="Approved"){ user.balance-=amount; }
+      localStorage.setItem("users",JSON.stringify(users)); alert("Transaction added");
+    }
+
+    // OTP Generator
+    function generateOTP(){
+      const username=document.getElementById("otpUser").value;
+      if(!username){ alert("Enter username"); return; }
+      let users=JSON.parse(localStorage.getItem("users"));
+      const user=users.find(u=>u.fullName===username);
+      if(!user){ alert("User not found"); return; }
+      const otp=Math.floor(100000+Math.random()*900000);
+      localStorage.setItem("otp_for_"+username,otp);
+      document.getElementById("showOTP").innerText=OTP for ${username}: ${otp};
+      alert(OTP ${otp} generated for ${username});
+    }
+
+    // Admin Controls
+    function changeAdminPassword(){ const pass=document.getElementById("adminPass").value; if(pass){ localStorage.setItem("admin_password",pass); alert("Password Changed"); document.getElementById("adminPass").value=""; } }
+    function logout(){ window.location.href="admin-login.html"; }
+
+    // Initialize user table
+    showUsers();
+  </script>
 
 </body>
-</html>
+  </html>
