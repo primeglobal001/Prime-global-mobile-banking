@@ -6,101 +6,80 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #eef2f5;
+      font-family: 'Roboto', sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
       margin: 0;
+    }
+    .app-container {
+      width: 100%;
+      max-width: 400px;
       padding: 20px;
     }
     .card {
-      background: #0b3c5d;
-      color: white;
-      padding: 20px;
-      border-radius: 14px;
-      margin-bottom: 20px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      padding: 30px;
+      text-align: center;
+    }
+    h1 {
+      color: #0b3c5d;
+      margin-bottom: 10px;
     }
     .balance {
-      font-size: 30px;
-      margin-top: 10px;
-    }
-    .box {
-      background: white;
-      padding: 20px;
-      border-radius: 14px;
-      margin-bottom: 15px;
-    }
-    select, button {
-      width: 100%;
-      padding: 14px;
-      border-radius: 8px;
-      border: none;
-      margin-top: 10px;
-      font-size: 16px;
+      font-size: 24px;
+      margin: 15px 0;
+      color: #1e5f7f;
+      font-weight: bold;
     }
     button {
-      background: #0b3c5d;
+      width: 100%;
+      padding: 14px;
+      margin-top: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #0b3c5d, #1e5f7f);
       color: white;
+      font-size: 16px;
       cursor: pointer;
+      transition: 0.3s;
     }
-    .txn {
-      font-size: 14px;
-      border-bottom: 1px solid #ddd;
-      padding: 8px 0;
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <h2>Welcome, <span id="username">Customer</span></h2>
-    <p>Account No: 3029 4481</p>
+  <div class="app-container">
+    <div class="card">
+      <h1>Welcome, <span id="username"></span></h1>
+      <div class="balance">Balance: <span id="balance"></span></div>
 
-    <select id="currency" onchange="changeCurrency()">
-      <option value="$">USD ($)</option>
-      <option value="£">GBP (£)</option>
-      <option value="€">EUR (€)</option>
-      <option value="₦">NGN (₦)</option>
-    </select>
-
-    <div class="balance">
-      <span id="symbol">$</span><span id="balance">5,000</span>
+      <button onclick="window.location.href='send-money.html'">Send Money</button>
+      <button onclick="window.location.href='admin-history.html'">Transaction History</button>
+      <button onclick="logout()">Logout</button>
     </div>
   </div>
 
-  <div class="box">
-    <button onclick="window.location.href='send.html'">Send Money</button>
-    <button onclick="addMoney()">Add Money</button>
-  </div>
+  <script>
+    const username = localStorage.getItem("pgmb_username") || "Customer";
+    document.getElementById("username").innerText = username;
 
-  <div class="box">
-    <h3>Recent Transactions</h3>
-    <div id="transactions">
-      <div class="txn">Transfer — <span id="symbol2">$</span>500</div>
-      <div class="txn">POS Payment — <span id="symbol3">$</span>120</div>
-    </div>
-  </div>
+    const balance = parseFloat(localStorage.getItem("pgmb_balance") || "5000");
+    const symbol = localStorage.getItem("pgmb_currency") || "$";
+    document.getElementById("balance").innerText = symbol + balance.toFixed(2);
 
-<script>
-  document.getElementById("username").innerText =
-    localStorage.getItem("pgmb_username") || "Customer";
-
-  let balance = 5000;
-  let symbol = "$";
-
-  function changeCurrency() {
-    symbol = document.getElementById("currency").value;
-    document.getElementById("symbol").innerText = symbol;
-    document.getElementById("symbol2").innerText = symbol;
-    document.getElementById("symbol3").innerText = symbol;
-  }
-
-  function sendMoney() {
-    alert("Transfer successful");
-  }
-
-  function addMoney() {
-    alert("Account credited");
-  }
-</script>
+    function logout() {
+      localStorage.removeItem("pgmb_username");
+      window.location.href = "login.html";
+    }
+  </script>
 
 </body>
 </html>
